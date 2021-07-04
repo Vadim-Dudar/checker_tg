@@ -36,15 +36,17 @@ class Window:
         root.geometry('800x300')
         root.resizable(False, False)
         root.title('Checker')
+        self.path = ''
+        self.nums = []
         # root.iconbitmap('icon.ico')
 
         l1 = Label(text='Numbers', font=7)
         l1.place(relx=0.2, rely=0.01)
-        lbox1 = Listbox(selectmode=EXTENDED, font=7)
-        lbox1.place(relx=0, rely=0.09, relwidth=0.5, relheight=0.6)
-        e1 = Entry()
-        e1.place(relx=0, rely=.73, relwidth=.5, relheight=.1)
-        b1 = Button(text='Add')
+        self.entry1 = Entry()
+        self.entry1.place(relx=0, rely=.73, relwidth=.5, relheight=.1)
+        self.lbox1 = Listbox(selectmode=EXTENDED, font=7)
+        self.lbox1.place(relx=0, rely=0.09, relwidth=0.5, relheight=0.6)
+        b1 = Button(text='Add', command=self.add_num)
         b1.place(relx=.0, rely=.85, relwidth=.23, relheight=.1)
         b12 = Button(text='Check')
         b12.place(relx=.25, rely=.85, relwidth=.25, relheight=.1)
@@ -57,7 +59,14 @@ class Window:
         root.mainloop()
     
     def file(self):
-        filename = filedialog.askopenfilename(initialdir = '/')
+        self.path = filedialog.askopenfilename(initialdir = '/')
+
+    def add_num(self):
+        self.lbox1.insert(END, self.entry1.get())
+        self.entry1.delete(0, END)
+        self.nums.append(str(self.entry1.get()))
+        print(self.nums)
+
 
 
 window = Window()
