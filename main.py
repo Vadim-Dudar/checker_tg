@@ -18,15 +18,20 @@ class Check:
         self.tg.login()
 
     def pick(self, num):
+        result = ''
 
         r = self.tg.call_method('importContacts', {'contacts': [{'phone_number': num}]})
         r.wait()
         user_id = r.update['user_ids']
 
         if user_id[0] == 0:
-            print('This contact is NOT using Telegram.')
+            print(f'This contact ({num})is NOT using Telegram.')
+            result = None
         else:
-            print(f'¡This contact({user_id[0]}) uses Telegram!')
+            print(f'¡This contact({num}) uses Telegram!')
+            result = num
+
+        return
 
 
 class Window:
@@ -48,10 +53,12 @@ class Window:
         self.lbox1.place(relx=0, rely=0.09, relwidth=0.5, relheight=0.6)
         b1 = Button(text='Add', command=self.add_num)
         b1.place(relx=.0, rely=.85, relwidth=.23, relheight=.1)
-        b12 = Button(text='Check')
+        b12 = Button(text='Check', command=self.check)
         b12.place(relx=.25, rely=.85, relwidth=.25, relheight=.1)
         b2 = Button(text='Add file', command=self.file)
         b2.place(relx=.75, rely=.5, relwidth=.25, relheight=.1)
+        b3 = Button()
+        b3.place()
 
         l2 = Label(text='', font=10)
         l2.place()
@@ -60,13 +67,29 @@ class Window:
     
     def file(self):
         self.path = filedialog.askopenfilename(initialdir = '/')
+        
+        i = Check()
+        for b in open(self.path):
+            i.pick(b)
 
     def add_num(self):
-        self.lbox1.insert(END, self.entry1.get())
+        num = self.entry1.get()
+        self.lbox1.insert(END, str(num))
         self.entry1.delete(0, END)
-        self.nums.append(str(self.entry1.get()))
-        print(self.nums)
+        self.nums.append(str(num))
 
+    def check(self):
+        self.lbox1.delete(END)
+        self.entry1.delete(0, END)
+
+        i = Check()
+        for b in self.nums:
+            i.pick(b)
+
+        self.nums.clear()
+
+    def save(self, extension):
+        pass
 
 
 window = Window()
